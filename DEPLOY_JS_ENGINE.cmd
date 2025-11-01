@@ -17,8 +17,8 @@ git remote -v >nul 2>&1
 if errorlevel 1 (
     echo ERROR: No Git remote configured!
     echo.
-    echo Run this first:
-    echo git remote add origin https://github.com/YOUR_USERNAME/JS_ENGINE.git
+echo Run this first:
+echo git remote add origin https://github.com/RAMAI-PRODUCTIONS/JS_ENGINE.git
     pause
     exit /b 1
 )
@@ -65,7 +65,7 @@ echo.
 echo This takes about 2-3 minutes...
 echo.
 echo Check progress:
-echo https://github.com/YOUR_USERNAME/JS_ENGINE/actions
+echo https://github.com/RAMAI-PRODUCTIONS/JS_ENGINE/actions
 echo.
 echo ========================================
 echo WAIT FOR GREEN CHECKMARK ✓
@@ -74,7 +74,7 @@ echo.
 echo After Actions completes (shows green ✓):
 echo.
 echo STEP 1: Go to Settings
-echo https://github.com/YOUR_USERNAME/JS_ENGINE/settings/pages
+echo https://github.com/RAMAI-PRODUCTIONS/JS_ENGINE/settings/pages
 echo.
 echo STEP 2: Configure GitHub Pages:
 echo   Source: Deploy from a branch
@@ -83,7 +83,7 @@ echo   Folder: / (root)
 echo   Click SAVE
 echo.
 echo STEP 3: Wait 1 minute, then visit:
-echo https://YOUR_USERNAME.github.io/JS_ENGINE/
+echo https://RAMAI-PRODUCTIONS.github.io/JS_ENGINE/
 echo.
 echo ========================================
 echo.
