@@ -2,6 +2,10 @@
 
 A minimal, production-ready starter template for building 3D web experiences with React Three Fiber.
 
+## 🌐 Live Demo
+
+**View the live site:** [https://RAMAI-PRODUCTIONS.github.io/JS_ENGINE/](https://RAMAI-PRODUCTIONS.github.io/JS_ENGINE/)
+
 ## 🚀 Quick Start
 
 ```bash
@@ -76,7 +80,7 @@ Every push to `main` triggers automatic deployment via GitHub Actions.
 3. Branch: `gh-pages`
 4. Save
 
-Your site will be live at: `https://[username].github.io/[repo]/`
+Your site will be live at: `https://RAMAI-PRODUCTIONS.github.io/JS_ENGINE/`
 
 ## 📚 Resources
 
