@@ -51,7 +51,8 @@ if (useSimpleDist) {
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
-  base: process.env.VITE_BASE_PATH || './', // GitHub Pages base path (set via env var in CI)
+  // VITE_BASE_PATH is set in GitHub Actions, BASE_URL is automatically exposed by Vite
+  base: process.env.VITE_BASE_PATH || process.env.BASE_URL || './', // GitHub Pages base path
   resolve: {
     alias: {
       '@engine': path.resolve(__dirname, './core/engine'),
