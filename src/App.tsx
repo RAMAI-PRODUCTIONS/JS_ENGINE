@@ -12,19 +12,18 @@ function GreenSphere() {
   const { scene } = useGLTF('/project/assets/meshes/sm_sphere.glb');
   const meshRef = useRef<THREE.Group>(null);
   
-  // Clone the scene to avoid mutating the original
-  const clonedScene = scene.clone();
-  
   // Apply green unlit material to all meshes
   useEffect(() => {
-    clonedScene.traverse((child: any) => {
-      if (child.isMesh) {
-        child.material = new THREE.MeshBasicMaterial({
-          color: '#00ff00' // Green color
-        });
-      }
-    });
-  }, [clonedScene]);
+    if (scene) {
+      scene.traverse((child: any) => {
+        if (child.isMesh) {
+          child.material = new THREE.MeshBasicMaterial({
+            color: '#00ff00' // Green color
+          });
+        }
+      });
+    }
+  }, [scene]);
   
   // Slow rotation animation
   useFrame((state, delta) => {
