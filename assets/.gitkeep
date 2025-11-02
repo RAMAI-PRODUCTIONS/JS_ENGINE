@@ -1,0 +1,8 @@
+# Assets Directory
+
+Place your game assets here:
+- models/ - 3D models (.gltf, .glb)
+- textures/ - Textures and images
+- audio/ - Sound effects and music
+- shaders/ - Custom shaders
+

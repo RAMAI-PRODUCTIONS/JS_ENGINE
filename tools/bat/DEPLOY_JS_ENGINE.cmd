@@ -10,7 +10,8 @@ echo.
 pause
 echo.
 
-cd /d C:\JS_ENGINE
+REM Get script directory and navigate to project root
+cd /d %~dp0\..\..\
 
 :: Check if remote is set
 git remote -v >nul 2>&1

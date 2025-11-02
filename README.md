@@ -1,105 +1,101 @@
-# React Three Fiber Starter Template
+# JS Game Engine
 
-A minimal, production-ready starter template for building 3D web experiences with React Three Fiber.
-
-## 🌐 Live Demo
-
-**View the live site:** [https://RAMAI-PRODUCTIONS.github.io/JS_ENGINE/](https://RAMAI-PRODUCTIONS.github.io/JS_ENGINE/)
-
-## 🚀 Quick Start
-
-```bash
-# Install dependencies
-npm install
-
-# Start development server
-npm run dev
-
-# Build for production
-npm run build
-```
-
-## 📦 What's Included
-
-- **React 18** - Modern React with hooks
-- **React Three Fiber** - Declarative Three.js in React
-- **@react-three/drei** - Useful 3D helpers and abstractions
-- **Vite** - Fast build tool with HMR
-- **GitHub Actions** - Automatic deployment to GitHub Pages
-
-## 🎨 Features
-
-- ✅ Minimal, clean codebase
-- ✅ Hot module replacement (HMR)
-- ✅ Responsive 3D canvas
-- ✅ TypeScript-ready (optional)
-- ✅ Production-optimized build
-- ✅ CI/CD with GitHub Actions
+A professional-grade, modular 3D game engine built with TypeScript, React Three Fiber, and Three.js. Features a complete Entity Component System (ECS), interface-based architecture, and Android/iOS export capabilities via Capacitor.
 
 ## 📁 Project Structure
 
 ```
-├── .github/workflows/    # GitHub Actions deployment
-├── src/
-│   ├── App.jsx          # Main React component with 3D canvas
-│   ├── main.jsx         # React entry point
-│   └── index.css        # Global styles
-├── index.html           # HTML template
-├── vite.config.js       # Vite configuration
-└── package.json         # Dependencies
+JS_ENGINE/
+├── docs/                  # 📚 All documentation
+├── tools/                 # 🛠️ Build tools and scripts
+│   └── bat/              # Batch scripts (.cmd files)
+├── scripts/              # 🔧 JavaScript build scripts
+├── engine/               # 🎮 Engine core (modular, interface-based)
+├── game/                # 🎯 Your game code
+├── assets/               # 📦 Game assets
+├── src/                  # ⚛️ React application
+└── build/                # 📦 Build outputs (date/time folders)
 ```
 
-## 🛠️ Development
+## 🚀 Quick Start
 
-### Start the dev server:
+### Build Everything (Web + Android APK)
+```cmd
+tools\bat\BUILD_ALL.cmd
+```
+
+Or use the shortcut:
+```cmd
+npm run build:all
+```
+
+### Development
 ```bash
 npm run dev
 ```
-Visit `http://localhost:5173`
 
-### Build for production:
+### Other Commands
 ```bash
-npm run build
-```
-Output in `dist/` folder
-
-### Preview production build:
-```bash
-npm run preview
+npm run build          # Build web app
+npm run android:apk    # Build APK only
+npm run clean          # Clean temp files
 ```
 
-## 🌐 Deployment
+## 📚 Documentation
 
-### GitHub Pages (Automatic)
+All documentation is in the `docs/` folder:
 
-Every push to `main` triggers automatic deployment via GitHub Actions.
+- **[README.md](docs/README.md)** - Main documentation
+- **[ENGINE_README.md](docs/ENGINE_README.md)** - Engine API reference
+- **[QUICK_START.md](docs/QUICK_START.md)** - Quick start guide
+- **[BUILD_COMMANDS.md](docs/BUILD_COMMANDS.md)** - Build commands reference
+- **[ANDROID_BUILD_GUIDE.md](docs/ANDROID_BUILD_GUIDE.md)** - Android build guide
+- **[BUILD_SYSTEM.md](docs/BUILD_SYSTEM.md)** - Build system documentation
 
-**Setup:**
-1. Go to Settings → Pages
-2. Source: Deploy from a branch
-3. Branch: `gh-pages`
-4. Save
+## 🛠️ Tools & Scripts
 
-Your site will be live at: `https://RAMAI-PRODUCTIONS.github.io/JS_ENGINE/`
+### Batch Scripts (`tools/bat/`)
+- `BUILD_ALL.cmd` - Build everything (clean + web + APK)
+- `BUILD_QUICK.cmd` - Quick build
+- `DEPLOY_JS_ENGINE.cmd` - Deploy to GitHub Pages
 
-## 📚 Resources
+### Build Scripts (`scripts/`)
+- `build.js` - Main build script (date/time folders)
+- `clean.js` - Cleanup script
+- `build-utils.js` - Build utilities
 
-- [React Three Fiber Docs](https://docs.pmnd.rs/react-three-fiber)
-- [Drei Helpers](https://github.com/pmndrs/drei)
-- [Three.js Docs](https://threejs.org/docs/)
-- [Vite Guide](https://vitejs.dev/guide/)
+## 🎮 Features
 
-## 🎯 Next Steps
+- **Entity Component System (ECS)** - Modular game object architecture
+- **Interface-Based Design** - Zero hard references
+- **Modular Systems** - Renderer, Input, Physics, Audio, AssetManager
+- **TypeScript First** - Full type safety
+- **Android Export** - Build APK/AAB files
+- **iOS Export** - Build IPA files (macOS required)
 
-1. Edit `src/App.jsx` to add 3D objects
-2. Import helpers from `@react-three/drei`
-3. Customize styling in `src/index.css`
-4. Push to GitHub to deploy
+## 📦 Build Outputs
+
+**Web Build:**
+```
+build/YYYYMMDD-HHMMSS/dist/
+```
+
+**APK:**
+```
+android/app/build/outputs/apk/debug/app-debug.apk
+```
+
+## 🔗 Quick Links
+
+- **Engine Docs:** [docs/ENGINE_README.md](docs/ENGINE_README.md)
+- **Build Guide:** [docs/BUILD_COMMANDS.md](docs/BUILD_COMMANDS.md)
+- **Android Setup:** [docs/ANDROID_BUILD_GUIDE.md](docs/ANDROID_BUILD_GUIDE.md)
 
 ## 📄 License
 
-MIT
+MIT License - Use freely for commercial and personal projects.
 
 ---
 
-Built with ❤️ using React + React Three Fiber + Vite
+**Built with ❤️ using TypeScript + Three.js + React + Capacitor**
+
