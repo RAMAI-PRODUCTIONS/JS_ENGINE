@@ -1,14 +1,30 @@
 import { useState, useRef, useEffect } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
+import { useGLTF } from '@react-three/drei';
 import * as THREE from 'three';
 import './index.css';
 
 /**
- * Red Unlit Sphere Component
- * Simple primitive sphere with unlit red material
+ * Green Sphere Component using sm_sphere.glb
+ * Loads GLTF model and applies green unlit material
  */
-function RedSphere() {
-  const meshRef = useRef<THREE.Mesh>(null);
+function GreenSphere() {
+  const { scene } = useGLTF('/project/assets/meshes/sm_sphere.glb');
+  const meshRef = useRef<THREE.Group>(null);
+  
+  // Clone the scene to avoid mutating the original
+  const clonedScene = scene.clone();
+  
+  // Apply green unlit material to all meshes
+  useEffect(() => {
+    clonedScene.traverse((child: any) => {
+      if (child.isMesh) {
+        child.material = new THREE.MeshBasicMaterial({
+          color: '#00ff00' // Green color
+        });
+      }
+    });
+  }, [clonedScene]);
   
   // Slow rotation animation
   useFrame((state, delta) => {
@@ -18,10 +34,11 @@ function RedSphere() {
   });
 
   return (
-    <mesh ref={meshRef} position={[0, 0, 0]}>
-      <sphereGeometry args={[1, 32, 32]} />
-      <meshBasicMaterial color="#ff0000" /> {/* Red unlit material */}
-    </mesh>
+    <primitive 
+      ref={meshRef} 
+      object={scene} 
+      position={[0, 0, 0]} 
+    />
   );
 }
 
@@ -32,7 +49,7 @@ function SceneSetup() {
   return (
     <>
       {/* Camera is automatically set up by Canvas, we'll configure it via gl */}
-      <RedSphere />
+      <GreenSphere />
     </>
   );
 }
@@ -84,6 +101,9 @@ export default function App() {
       }}>
         <div>FPS: {fps}</div>
         <div>JS Game Engine v1.0.0</div>
+        <div style={{ fontSize: '12px', color: '#0f0', marginTop: '5px' }}>
+          Using: sm_sphere.glb
+        </div>
         <div style={{ fontSize: '12px', color: '#aaa', marginTop: '5px' }}>
           Renderer: {rendererInfo}
         </div>
