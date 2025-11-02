@@ -22,6 +22,14 @@ function GreenSphere() {
     const cleanBase = baseUrl.endsWith('/') ? baseUrl.slice(0, -1) : baseUrl;
     assetPath = `${cleanBase}/project/assets/meshes/sm_sphere.glb`;
   }
+  // Debug: log asset path in development
+  useEffect(() => {
+    if (import.meta.env.DEV) {
+      console.log('Loading GLB from:', assetPath);
+      console.log('BASE_URL:', import.meta.env.BASE_URL);
+    }
+  }, [assetPath]);
+
   const { scene } = useGLTF(assetPath);
   const meshRef = useRef<THREE.Group>(null);
   
