@@ -9,7 +9,13 @@ import './index.css';
  * Loads GLTF model and applies green unlit material
  */
 function GreenSphere() {
-  const { scene } = useGLTF('/project/assets/meshes/sm_sphere.glb');
+  // Use base URL for GitHub Pages compatibility
+  // BASE_URL will be '/JS_ENGINE/' in production, './' in dev
+  const baseUrl = import.meta.env.BASE_URL || './';
+  // Remove trailing slash if present, then add path
+  const cleanBase = baseUrl.endsWith('/') ? baseUrl.slice(0, -1) : baseUrl;
+  const assetPath = `${cleanBase}/project/assets/meshes/sm_sphere.glb`;
+  const { scene } = useGLTF(assetPath);
   const meshRef = useRef<THREE.Group>(null);
   
   // Clone scene and apply green unlit material to all meshes (memoized)
