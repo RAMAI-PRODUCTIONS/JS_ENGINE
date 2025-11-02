@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useMemo } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { useGLTF } from '@react-three/drei';
 import * as THREE from 'three';
@@ -12,8 +12,9 @@ function GreenSphere() {
   const { scene } = useGLTF('/project/assets/meshes/sm_sphere.glb');
   const meshRef = useRef<THREE.Group>(null);
   
-  // Clone scene and apply green unlit material to all meshes
-  const clonedScene = scene ? (() => {
+  // Clone scene and apply green unlit material to all meshes (memoized)
+  const clonedScene = useMemo(() => {
+    if (!scene) return null;
     const cloned = scene.clone();
     cloned.traverse((child: any) => {
       if (child.isMesh) {
@@ -23,7 +24,7 @@ function GreenSphere() {
       }
     });
     return cloned;
-  })() : null;
+  }, [scene]);
   
   // Slow rotation animation
   useFrame((state, delta) => {
