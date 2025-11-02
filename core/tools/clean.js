@@ -6,7 +6,7 @@ import { join, resolve } from 'path';
 import { fileURLToPath } from 'url';
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url)).replace(/\\/g, '/').replace(/\/[^/]+\/?$/, '');
-const rootDir = resolve(__dirname, '..');
+const rootDir = resolve(__dirname, '../..');
 
 const foldersToClean = [
   'dist',

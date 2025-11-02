@@ -5,20 +5,22 @@
   "description": "A modular 3D game engine with Android export capabilities",
   "scripts": {
     "dev": "vite",
-    "build": "node scripts/build.js",
+    "build": "node core/tools/build.js",
     "build:web": "vite build",
     "preview": "vite preview",
     "android": "npm run build && cap sync android && cap open android",
     "android:build": "npm run build && cap sync android",
     "android:apk": "npm run build && cap sync android && cd android && gradlew.bat assembleDebug",
     "build:all": "npm run clean && npm run build && npx cap sync android && cd android && gradlew.bat assembleDebug && cd ..",
-    "docs": "echo Documentation is in docs/ folder. See docs/README.md for main docs.",
+    "process:models": "node core/tools/gltfjsx/process-models.js",
+    "process:models:transform": "node core/tools/gltfjsx/process-models.js --transform true --types true",
+    "docs": "echo Documentation is in core/docs/ folder. See core/docs/README.md for main docs.",
     "ios": "npm run build && cap sync ios && cap open ios",
     "cap:sync": "cap sync",
     "cap:add:android": "cap add android",
     "cap:add:ios": "cap add ios",
-    "clean": "node scripts/clean.js",
-    "clean:builds": "node scripts/clean.js"
+    "clean": "node core/tools/clean.js",
+    "clean:builds": "node core/tools/clean.js"
   },
   "dependencies": {
     "@capacitor/android": "^6.0.0",
@@ -36,6 +38,7 @@
     "@types/react-dom": "^18.3.0",
     "@types/three": "^0.169.0",
     "@vitejs/plugin-react": "^4.3.3",
+    "gltfjsx": "^6.5.3",
     "terser": "^5.44.0",
     "typescript": "^5.5.3",
     "vite": "^5.4.11"

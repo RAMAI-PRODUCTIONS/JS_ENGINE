@@ -19,6 +19,7 @@ export type { IInput } from './interfaces/IInput';
 export type { IPhysics, IRigidBody, ICollider, Vector3, Quaternion } from './interfaces/IPhysics';
 export type { IAudio, IAudioSource } from './interfaces/IAudio';
 export type { IAssetManager, AssetType, IAsset } from './interfaces/IAssetManager';
+export type { IModelProcessor, IModelProcessOptions, IProcessedModel } from './interfaces/IModelProcessor';
 
 // Systems
 export { RendererSystem } from './systems/RendererSystem';
@@ -26,6 +27,7 @@ export { InputSystem } from './systems/InputSystem';
 export { PhysicsSystem } from './systems/PhysicsSystem';
 export { AudioSystem } from './systems/AudioSystem';
 export { AssetManagerSystem } from './systems/AssetManagerSystem';
+export { GLTFJSXProcessor } from './systems/GLTFJSXProcessor';
 
 // Components
 export { Transform } from './components/Transform';
@@ -33,7 +35,7 @@ export { MeshRenderer } from './components/MeshRenderer';
 export { Camera } from './components/Camera';
 export { Light } from './components/Light';
 export { Script } from './components/Script';
+export { GLTFModel } from './components/GLTFModel';
 
 // Utils
 export { generateId, generateUUID } from './utils/IdGenerator';
-

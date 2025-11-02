@@ -6,22 +6,30 @@ A professional-grade, modular 3D game engine built with TypeScript, React Three 
 
 ```
 JS_ENGINE/
-├── docs/                  # 📚 All documentation
-├── tools/                 # 🛠️ Build tools and scripts
-│   └── bat/              # Batch scripts (.cmd files)
-├── scripts/              # 🔧 JavaScript build scripts
-├── engine/               # 🎮 Engine core (modular, interface-based)
-├── game/                # 🎯 Your game code
-├── assets/               # 📦 Game assets
-├── src/                  # ⚛️ React application
-└── build/                # 📦 Build outputs (date/time folders)
+├── core/                  # 🎮 Engine Core (DO NOT MODIFY)
+│   ├── engine/           # Core engine implementation
+│   ├── assets/           # Shared engine assets
+│   ├── tools/            # Build tools and scripts
+│   ├── docs/             # Engine documentation
+│   ├── code/             # Shared engine code
+│   └── shaders/          # Shared shaders
+│
+├── project/               # 🎯 Your Project (MODIFY FREELY)
+│   ├── code/             # Game scenes & scripts
+│   ├── assets/           # Game assets (meshes, textures, audio)
+│   └── shaders/          # Custom shaders
+│
+├── src/                   # ⚛️ React application
+├── android/               # 🤖 Android build
+├── build/                 # 📦 Build outputs
+└── node_modules/          # 📚 Dependencies
 ```
 
 ## 🚀 Quick Start
 
 ### Build Everything (Web + Android APK)
 ```cmd
-tools\bat\BUILD_ALL.cmd
+core\tools\bat\BUILD_ALL.cmd
 ```
 
 Or use the shortcut:
@@ -43,23 +51,25 @@ npm run clean          # Clean temp files
 
 ## 📚 Documentation
 
-All documentation is in the `docs/` folder:
+All documentation is in the `core/docs/` folder:
 
-- **[README.md](docs/README.md)** - Main documentation
-- **[ENGINE_README.md](docs/ENGINE_README.md)** - Engine API reference
-- **[QUICK_START.md](docs/QUICK_START.md)** - Quick start guide
-- **[BUILD_COMMANDS.md](docs/BUILD_COMMANDS.md)** - Build commands reference
-- **[ANDROID_BUILD_GUIDE.md](docs/ANDROID_BUILD_GUIDE.md)** - Android build guide
-- **[BUILD_SYSTEM.md](docs/BUILD_SYSTEM.md)** - Build system documentation
+- **[README.md](core/docs/README.md)** - Main documentation
+- **[ENGINE_README.md](core/docs/ENGINE_README.md)** - Engine API reference
+- **[FOLDER_STRUCTURE_NEW.md](core/docs/FOLDER_STRUCTURE_NEW.md)** - Complete folder structure guide
+- **[GLTFJSX_INTEGRATION.md](core/docs/GLTFJSX_INTEGRATION.md)** - GLTF model optimization guide
+- **[QUICK_START.md](core/docs/QUICK_START.md)** - Quick start guide
+- **[BUILD_COMMANDS.md](core/docs/BUILD_COMMANDS.md)** - Build commands reference
+- **[ANDROID_BUILD_GUIDE.md](core/docs/ANDROID_BUILD_GUIDE.md)** - Android build guide
+- **[BUILD_SYSTEM.md](core/docs/BUILD_SYSTEM.md)** - Build system documentation
 
 ## 🛠️ Tools & Scripts
 
-### Batch Scripts (`tools/bat/`)
+### Batch Scripts (`core/tools/bat/`)
 - `BUILD_ALL.cmd` - Build everything (clean + web + APK)
 - `BUILD_QUICK.cmd` - Quick build
 - `DEPLOY_JS_ENGINE.cmd` - Deploy to GitHub Pages
 
-### Build Scripts (`scripts/`)
+### Build Scripts (`core/tools/`)
 - `build.js` - Main build script (date/time folders)
 - `clean.js` - Cleanup script
 - `build-utils.js` - Build utilities
@@ -87,9 +97,10 @@ android/app/build/outputs/apk/debug/app-debug.apk
 
 ## 🔗 Quick Links
 
-- **Engine Docs:** [docs/ENGINE_README.md](docs/ENGINE_README.md)
-- **Build Guide:** [docs/BUILD_COMMANDS.md](docs/BUILD_COMMANDS.md)
-- **Android Setup:** [docs/ANDROID_BUILD_GUIDE.md](docs/ANDROID_BUILD_GUIDE.md)
+- **Folder Structure:** [core/docs/FOLDER_STRUCTURE_NEW.md](core/docs/FOLDER_STRUCTURE_NEW.md) - Complete structure guide
+- **Engine Docs:** [core/docs/ENGINE_README.md](core/docs/ENGINE_README.md)
+- **Build Guide:** [core/docs/BUILD_COMMANDS.md](core/docs/BUILD_COMMANDS.md)
+- **Android Setup:** [core/docs/ANDROID_BUILD_GUIDE.md](core/docs/ANDROID_BUILD_GUIDE.md)
 
 ## 📄 License
 

@@ -28,12 +28,12 @@
     /* Paths */
     "baseUrl": ".",
     "paths": {
-      "@engine/*": ["engine/*"],
-      "@game/*": ["game/*"],
-      "@assets/*": ["assets/*"]
+      "@engine/*": ["core/engine/*"],
+      "@game/*": ["project/code/*"],
+      "@assets/*": ["project/assets/*"]
     }
   },
-  "include": ["src", "engine", "game"],
+  "include": ["src", "core/engine", "project/code"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
 

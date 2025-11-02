@@ -4,7 +4,7 @@
 
 ### Build Everything (Clean + Web + APK)
 ```cmd
-BUILD_ALL.cmd
+core\tools\bat\BUILD_ALL.cmd
 ```
 
 This is the **single command** that does everything:
@@ -15,7 +15,7 @@ This is the **single command** that does everything:
 
 ### Quick Alternative
 ```cmd
-BUILD_QUICK.cmd
+core\tools\bat\BUILD_QUICK.cmd
 ```
 Same as above, simpler output.
 
@@ -72,12 +72,12 @@ android/app/build/outputs/apk/debug/app-debug.apk
 
 ## Tips
 
-- **First build:** Run `BUILD_ALL.cmd`
+- **First build:** Run `npm run build:all` (recommended)
 - **After code changes:** Run `npm run build:all`
 - **Quick web test:** Run `npm run build`
 - **Free space:** Run `npm run clean -- --all-builds`
 
 ---
 
-**Recommended:** Use `BUILD_ALL.cmd` - it's the simplest! 🚀
+**Recommended:** Use `npm run build:all` - works from anywhere! 🚀
 

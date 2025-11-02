@@ -29,20 +29,47 @@ npm run android:build
 
 ## 📚 Documentation
 
-- **[Engine Documentation](./ENGINE_README.md)** - Complete engine API and architecture guide
-- **[Android Build Guide](./ANDROID_BUILD_GUIDE.md)** - Detailed Android setup and build instructions
+### Getting Started
+- **[FOLDER_STRUCTURE_NEW.md](./FOLDER_STRUCTURE_NEW.md)** - Complete folder structure guide
+- **[QUICK_START.md](./QUICK_START.md)** - Quick start guide
+- **[MIGRATION_COMPLETE.md](./MIGRATION_COMPLETE.md)** - Recent structure migration details
+
+### Core Documentation
+- **[ENGINE_README.md](./ENGINE_README.md)** - Complete engine API and architecture guide
+- **[BUILD_COMMANDS.md](./BUILD_COMMANDS.md)** - Quick reference for build commands
+- **[BUILD_SYSTEM.md](./BUILD_SYSTEM.md)** - Detailed build system documentation
+
+### Mobile & Assets
+- **[ANDROID_BUILD_GUIDE.md](./ANDROID_BUILD_GUIDE.md)** - Android setup and build instructions
+- **[GLTFJSX_INTEGRATION.md](./GLTFJSX_INTEGRATION.md)** - Model optimization guide
+- **[GLTFJSX_QUICK_START.md](./GLTFJSX_QUICK_START.md)** - Quick model processing guide
+
+### Deployment
+- **[GITHUB_PAGES_DEPLOY.md](./GITHUB_PAGES_DEPLOY.md)** - GitHub Pages deployment guide
 
 ## 📁 Project Structure
 
 ```
 JS_ENGINE/
-├── engine/          # Engine core (modular, interface-based)
-├── game/            # Your game code
-├── assets/          # Game assets
-├── src/             # React application
-├── android/         # Android project (generated)
-└── ios/             # iOS project (generated)
+├── core/                    # 🎮 Engine Core (DO NOT MODIFY)
+│   ├── engine/             # Complete ECS implementation
+│   ├── assets/             # Shared engine assets
+│   ├── tools/              # Build tools and scripts
+│   ├── docs/               # All documentation
+│   ├── code/               # Shared engine code (future)
+│   └── shaders/            # Shared shaders (future)
+│
+├── project/                 # 🎯 Your Project (MODIFY FREELY)
+│   ├── code/               # Game scenes & scripts
+│   ├── assets/             # Game assets
+│   └── shaders/            # Custom shaders
+│
+├── src/                     # ⚛️ React application
+├── android/                 # 🤖 Android build
+└── build/                   # 📦 Build outputs
 ```
+
+See [FOLDER_STRUCTURE_NEW.md](./FOLDER_STRUCTURE_NEW.md) for complete details.
 
 ## 🎮 Core Systems
 
@@ -115,8 +142,9 @@ engine.start();
 ## 📖 Learn More
 
 - Read [ENGINE_README.md](./ENGINE_README.md) for full documentation
-- Check `game/scenes/MainScene.ts` for examples
-- See `engine/interfaces/` for all available interfaces
+- Check `project/code/scenes/MainScene.ts` for examples
+- See `core/engine/interfaces/` for all available interfaces
+- Explore [FOLDER_STRUCTURE_NEW.md](./FOLDER_STRUCTURE_NEW.md) for folder organization
 
 ## 🤝 Contributing
 

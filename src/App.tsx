@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
-import { Engine, RendererSystem, InputSystem, PhysicsSystem, AudioSystem, AssetManagerSystem } from '../engine/index';
-import { MainScene } from '../game/scenes/MainScene';
+import { Engine, RendererSystem, InputSystem, PhysicsSystem, AudioSystem, AssetManagerSystem } from '../core/engine/index';
+import { MainScene } from '../project/code/scenes/MainScene';
 import './index.css';
 
 /**

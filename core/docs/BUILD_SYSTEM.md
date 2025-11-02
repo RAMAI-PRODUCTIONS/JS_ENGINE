@@ -62,7 +62,7 @@ npm run clean -- --all-builds
 
 ## How It Works
 
-1. **Build Script** (`scripts/build.js`)
+1. **Build Script** (`core/tools/build.js`)
    - Generates folder name: `YYYYMMDD-HHMMSS`
    - Creates build directory
    - Sets `BUILD_FOLDER` environment variable
@@ -81,7 +81,7 @@ npm run clean -- --all-builds
 
 ## Build Retention
 
-By default, the system keeps the **last 5 builds** and automatically deletes older ones. You can modify this in `scripts/build.js`:
+By default, the system keeps the **last 5 builds** and automatically deletes older ones. You can modify this in `core/tools/build.js`:
 
 ```javascript
 cleanOldBuilds(5);  // Change number to keep more/less builds
@@ -127,6 +127,6 @@ npm run android:apk
 - **Current Build**: `build/.current-build` (text file with folder name)
 - **Latest Build**: `build/{latest-folder}/dist/`
 - **APK**: `android/app/build/outputs/apk/debug/app-debug.apk`
-- **Build Script**: `scripts/build.js`
-- **Clean Script**: `scripts/clean.js`
+- **Build Script**: `core/tools/build.js`
+- **Clean Script**: `core/tools/clean.js`
 

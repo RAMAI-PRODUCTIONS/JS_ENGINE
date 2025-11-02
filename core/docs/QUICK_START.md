@@ -4,10 +4,13 @@
 
 Simply run:
 ```cmd
-BUILD_ALL.cmd
+core\tools\bat\BUILD_ALL.cmd
 ```
 
-Or double-click `BUILD_ALL.cmd` in Windows Explorer!
+Or from anywhere use npm:
+```cmd
+npm run build:all
+```
 
 ## What Happens
 
@@ -31,17 +34,26 @@ android/app/build/outputs/apk/debug/app-debug.apk
 
 ## Alternative Commands
 
-### NPM Version
+### NPM Version (Recommended)
 ```cmd
 npm run build:all
 ```
 
-### Quick Version (simpler output)
+### Quick CMD (simpler output)
 ```cmd
-BUILD_QUICK.cmd
+core\tools\bat\BUILD_QUICK.cmd
+```
+
+## Development
+
+For development with hot reload:
+```cmd
+npm run dev
 ```
 
 ## That's It!
 
-Just run `BUILD_ALL.cmd` whenever you want to build everything! 🚀
+Just run `npm run build:all` whenever you want to build everything! 🚀
+
+See [BUILD_COMMANDS.md](./BUILD_COMMANDS.md) for all available commands.
 

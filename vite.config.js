@@ -44,9 +44,9 @@ export default defineConfig({
   base: './', // Use relative paths for mobile compatibility
   resolve: {
     alias: {
-      '@engine': path.resolve(__dirname, './engine'),
-      '@game': path.resolve(__dirname, './game'),
-      '@assets': path.resolve(__dirname, './assets')
+      '@engine': path.resolve(__dirname, './core/engine'),
+      '@game': path.resolve(__dirname, './project/code'),
+      '@assets': path.resolve(__dirname, './project/assets')
     }
   },
   build: {
