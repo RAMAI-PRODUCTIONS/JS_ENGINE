@@ -1,0 +1,48 @@
+========================================
+Git Commands to Store Desktop Export Work
+========================================
+
+Run these commands in your terminal:
+
+1. Create and switch to feature branch:
+   git checkout -b feature/windows-linux-desktop-export
+
+2. Add all changes:
+   git add .
+
+3. Commit with message:
+   git commit -m "Add Windows and Linux desktop export support via Electron
+
+- Add Electron main process and preload scripts
+- Add electron-builder configuration for Windows and Linux  
+- Add build scripts for desktop platforms
+- Add comprehensive desktop build documentation
+- Update build system documentation
+
+Note: Windows build has ES module issue that needs fixing.
+Will continue development later."
+
+4. Switch back to stable branch (dev or main):
+   git checkout dev
+
+5. Verify you're back on stable branch:
+   git status
+
+========================================
+OR Run the batch file:
+========================================
+
+store-desktop-export.bat
+
+This will do all the steps above automatically.
+
+========================================
+To Continue Desktop Export Later:
+========================================
+
+git checkout feature/windows-linux-desktop-export
+
+Then fix the ES module issue:
+- Rename electron/main.js to electron/main.cjs
+- Update package.json "main" field to "electron/main.cjs"
+

@@ -47,6 +47,18 @@ npm run android:apk
 - Builds APK
 - APK location: `android/app/build/outputs/apk/debug/app-debug.apk`
 
+### Desktop (Windows/Linux) Build
+```bash
+npm run electron:build:win    # Windows only
+npm run electron:build:linux # Linux only
+npm run electron:build:all   # Both platforms
+```
+- Builds web app
+- Packages with Electron
+- Creates installers/executables
+- Output location: `build/electron-dist/`
+- See [Desktop Build Guide](./DESKTOP_BUILD_GUIDE.md) for details
+
 ### Clean Build Files
 ```bash
 npm run clean
@@ -98,6 +110,15 @@ These are cleaned with `npm run clean` but you can rebuild them with:
 npm run android:apk
 ```
 
+## Desktop Builds (Windows/Linux)
+
+Desktop build artifacts are stored in:
+- `build/electron-dist/` - Electron build output
+  - Windows: `.exe` installers and portable executables
+  - Linux: `.AppImage`, `.deb`, and `.tar.gz` packages
+
+See [Desktop Build Guide](./DESKTOP_BUILD_GUIDE.md) for complete documentation.
+
 ## Best Practices
 
 1. **Always use `npm run build`** for production builds
@@ -127,6 +148,8 @@ npm run android:apk
 - **Current Build**: `build/.current-build` (text file with folder name)
 - **Latest Build**: `build/{latest-folder}/dist/`
 - **APK**: `android/app/build/outputs/apk/debug/app-debug.apk`
+- **Desktop Builds**: `build/electron-dist/`
 - **Build Script**: `core/tools/build.js`
+- **Electron Build Script**: `core/tools/build-electron.js`
 - **Clean Script**: `core/tools/clean.js`
 
