@@ -19,6 +19,9 @@ export class RendererSystem implements IRenderer {
 
   private renderer: THREE.WebGLRenderer;
   private camera: THREE.PerspectiveCamera;
+  private threeScene: THREE.Scene | null = null;
+  private entityMeshes: Map<string, THREE.Object3D> = new Map();
+  private gltfLoader: any = null;
   private stats = {
     fps: 0,
     drawCalls: 0,
@@ -55,6 +58,10 @@ export class RendererSystem implements IRenderer {
 
   async initialize(): Promise<void> {
     console.log('[RendererSystem] Initialized');
+    this.threeScene = new THREE.Scene();
+    
+    // Lazy load GLTFLoader when needed
+    // Initialize it here for async loading
   }
 
   update(_deltaTime: number): void {
@@ -77,19 +84,183 @@ export class RendererSystem implements IRenderer {
     this.renderer.setPixelRatio(ratio);
   }
 
-  render(_scene: IScene): void {
-    // For now, render a basic THREE.Scene
-    // In a full implementation, we'd convert our IScene to THREE.Scene
-    const threeScene = new THREE.Scene();
-    
-    // TODO: Convert IScene entities to THREE objects
-    // This is a simplified version for demonstration
-    
-    this.renderer.render(threeScene, this.camera);
+  render(scene: IScene): void {
+    if (!this.threeScene) {
+      this.threeScene = new THREE.Scene();
+    }
+
+    // Clear previous frame (but keep loaded meshes)
+    // We'll add back entities each frame
+    const existingMeshes = Array.from(this.entityMeshes.values());
+    existingMeshes.forEach(mesh => {
+      if (this.threeScene!.children.includes(mesh)) {
+        this.threeScene!.remove(mesh);
+      }
+    });
+
+    // Get camera from scene
+    const mainCameraEntity = scene.findEntitiesWithComponent('Camera').find(
+      (e: any) => {
+        const cam = e.getComponent('Camera');
+        return cam && (cam as any).isMain;
+      }
+    );
+
+    if (mainCameraEntity) {
+      const transform = mainCameraEntity.getComponent('Transform');
+      const camera = mainCameraEntity.getComponent('Camera');
+      if (transform && camera) {
+        this.camera.position.set(transform.position.x, transform.position.y, transform.position.z);
+        this.camera.rotation.set(transform.rotation.x, transform.rotation.y, transform.rotation.z);
+        this.camera.fov = (camera as any).fov;
+        this.camera.near = (camera as any).near;
+        this.camera.far = (camera as any).far;
+        this.camera.updateProjectionMatrix();
+      }
+    }
+
+    // Add lights from scene
+    scene.findEntitiesWithComponent('Light').forEach((entity: any) => {
+      const light = entity.getComponent('Light');
+      const transform = entity.getComponent('Transform');
+      if (light && this.threeScene) {
+        const lightType = (light as any).lightType;
+        let threeLight: THREE.Light;
+
+        if (lightType === 'directional') {
+          threeLight = new THREE.DirectionalLight();
+        } else if (lightType === 'point') {
+          threeLight = new THREE.PointLight();
+        } else if (lightType === 'spot') {
+          threeLight = new THREE.SpotLight();
+        } else {
+          threeLight = new THREE.AmbientLight();
+        }
+
+        if (transform && threeLight instanceof THREE.DirectionalLight || threeLight instanceof THREE.PointLight || threeLight instanceof THREE.SpotLight) {
+          threeLight.position.set(transform.position.x, transform.position.y, transform.position.z);
+        }
+
+        threeLight.intensity = (light as any).intensity;
+        threeLight.color.setRGB((light as any).color.r, (light as any).color.g, (light as any).color.b);
+        this.threeScene.add(threeLight);
+      }
+    });
+
+    // Render entities with GLTFModel components
+    const gltfEntities = scene.findEntitiesWithComponent('GLTFModel');
+    gltfEntities.forEach((entity: any) => {
+      this.renderGLTFEntity(entity);
+    });
+
+    // Render entities with MeshRenderer (basic meshes)
+    scene.findEntitiesWithComponent('MeshRenderer').forEach((entity: any) => {
+      this.renderMeshEntity(entity);
+    });
+
+    // Render the scene
+    this.renderer.render(this.threeScene, this.camera);
     
     // Update stats
     this.stats.drawCalls = this.renderer.info.render.calls;
     this.stats.triangles = this.renderer.info.render.triangles;
+  }
+
+  private renderGLTFEntity(entity: any): void {
+    const gltfModel = entity.getComponent('GLTFModel');
+    const transform = entity.getComponent('Transform');
+    
+    if (!gltfModel || !transform || !this.threeScene) return;
+
+    const modelPath = (gltfModel as any).modelPath;
+    if (!modelPath) return;
+
+    // Check if already loaded
+    const meshKey = `${entity.id}-${modelPath}`;
+    let threeMesh = this.entityMeshes.get(meshKey);
+
+    if (!threeMesh) {
+      // Start async loading (non-blocking)
+      this.loadGLTFAsync(meshKey, modelPath, gltfModel);
+      return; // Skip this frame, will render once loaded
+    }
+
+    if (threeMesh && this.threeScene) {
+      // Update transform
+      threeMesh.position.set(transform.position.x, transform.position.y, transform.position.z);
+      threeMesh.rotation.set(transform.rotation.x, transform.rotation.y, transform.rotation.z);
+      threeMesh.scale.set(transform.scale.x, transform.scale.y, transform.scale.z);
+
+      // Add to scene if not already added
+      if (!this.threeScene.children.includes(threeMesh)) {
+        this.threeScene.add(threeMesh);
+      }
+    }
+  }
+
+  private async loadGLTFAsync(meshKey: string, modelPath: string, gltfModel: any): Promise<void> {
+    if (!this.gltfLoader) {
+      const GLTFLoaderModule = await import('three/examples/jsm/loaders/GLTFLoader.js');
+      this.gltfLoader = new GLTFLoaderModule.GLTFLoader();
+    }
+
+    try {
+      const gltf = await new Promise<any>((resolve, reject) => {
+        this.gltfLoader.load(modelPath, resolve, undefined, reject);
+      });
+
+      if (gltf.scene) {
+        const threeMesh = gltf.scene.clone();
+        
+        // Apply material override if specified
+        const materialOverride = (gltfModel as any).materialOverride;
+        if (materialOverride) {
+          threeMesh.traverse((child: any) => {
+            if (child.isMesh) {
+              let material: THREE.Material;
+              
+              if (materialOverride.type === 'unlit') {
+                material = new THREE.MeshBasicMaterial({
+                  color: materialOverride.color 
+                    ? new THREE.Color(materialOverride.color.r, materialOverride.color.g, materialOverride.color.b)
+                    : 0xffffff
+                });
+              } else {
+                material = new THREE.MeshStandardMaterial({
+                  color: materialOverride.color 
+                    ? new THREE.Color(materialOverride.color.r, materialOverride.color.g, materialOverride.color.b)
+                    : 0xffffff
+                });
+              }
+
+              child.material = material;
+            }
+          });
+        }
+        
+        this.entityMeshes.set(meshKey, threeMesh);
+      }
+    } catch (error) {
+      console.error(`[RendererSystem] Failed to load GLTF: ${modelPath}`, error);
+    }
+  }
+
+  private renderMeshEntity(entity: any): void {
+    const meshRenderer = entity.getComponent('MeshRenderer');
+    const transform = entity.getComponent('Transform');
+    
+    if (!meshRenderer || !transform || !this.threeScene) return;
+
+    // Create basic geometry (cube for now)
+    const geometry = new THREE.BoxGeometry(1, 1, 1);
+    const material = new THREE.MeshStandardMaterial({ color: 0x00ff00 });
+    const mesh = new THREE.Mesh(geometry, material);
+    
+    mesh.position.set(transform.position.x, transform.position.y, transform.position.z);
+    mesh.rotation.set(transform.rotation.x, transform.rotation.y, transform.rotation.z);
+    mesh.scale.set(transform.scale.x, transform.scale.y, transform.scale.z);
+    
+    this.threeScene.add(mesh);
   }
 
   getStats() {

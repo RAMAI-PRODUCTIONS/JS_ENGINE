@@ -1,4 +1,5 @@
-import { Scene, Entity, Transform, Camera, Light, MeshRenderer } from '@engine/index';
+import { Scene, Entity, Transform, Camera, Light, MeshRenderer, GLTFModel } from '@engine/index';
+import { QuaternionRotateScript } from '../scripts/QuaternionRotateScript';
 
 /**
  * Main Game Scene
@@ -61,6 +62,29 @@ export class MainScene extends Scene {
     cubeEntity.addComponent(meshRenderer);
     cubeEntity.tags.add('interactable');
     this.addEntity(cubeEntity);
+
+    // Create sphere entity with GLB model, red unlit shader, and quaternion rotation
+    const sphereEntity = new Entity('Sphere');
+    // Position sphere in front of camera (camera is at z: 5, sphere at z: 0)
+    const sphereTransform = new Transform(
+      { x: 0, y: 2, z: 0 }, // Same y as camera, in front (z: 0)
+      { x: 0, y: 0, z: 0 },
+      { x: 1, y: 1, z: 1 }
+    );
+    const sphereModel = new GLTFModel('project/assets/meshes/sphere.glb');
+    // Set red unlit material override
+    sphereModel.materialOverride = {
+      type: 'unlit',
+      color: { r: 1, g: 0, b: 0 } // Red color
+    };
+    // Add optimized quaternion rotation script for slow spinning
+    const rotateScript = new QuaternionRotateScript();
+    rotateScript.setRotationSpeed(0.5); // Slow pace
+
+    sphereEntity.addComponent(sphereTransform);
+    sphereEntity.addComponent(sphereModel);
+    sphereEntity.addComponent(rotateScript);
+    this.addEntity(sphereEntity);
 
     console.log('[MainScene] Loaded');
   }

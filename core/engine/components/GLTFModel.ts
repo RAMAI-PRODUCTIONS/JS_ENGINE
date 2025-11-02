@@ -35,6 +35,16 @@ export class GLTFModel implements IComponent {
     loop?: boolean;
   };
 
+  /**
+   * Material override configuration
+   * If provided, will replace model materials with this material
+   */
+  public materialOverride?: {
+    type: 'unlit' | 'standard' | 'phong' | 'physical';
+    color?: { r: number; g: number; b: number };
+    emissive?: { r: number; g: number; b: number };
+  };
+
   private loadedModel: any = null;
 
   constructor(modelPath: string = '') {
@@ -63,7 +73,8 @@ export class GLTFModel implements IComponent {
       type: this.type,
       modelPath: this.modelPath,
       autoDispose: this.autoDispose,
-      animations: this.animations
+      animations: this.animations,
+      materialOverride: this.materialOverride
     };
   }
 
@@ -71,6 +82,7 @@ export class GLTFModel implements IComponent {
     this.modelPath = data.modelPath || '';
     this.autoDispose = data.autoDispose ?? true;
     this.animations = data.animations;
+    this.materialOverride = data.materialOverride;
   }
 
   /**
