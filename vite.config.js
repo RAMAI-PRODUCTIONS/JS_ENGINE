@@ -21,27 +21,37 @@ function getBuildFolderName() {
   return `${year}${month}${day}-${hours}${minutes}${seconds}`;
 }
 
-// Get or create build folder
-const buildFolderName = process.env.BUILD_FOLDER || getBuildFolderName();
-const buildDir = path.resolve(__dirname, 'build', buildFolderName);
-const distDir = path.resolve(buildDir, 'dist');
+// For GitHub Pages or simple web builds, use dist directly
+// For custom builds (Android/iOS), use date-based folders
+const useSimpleDist = process.env.VITE_BUILD_OUTDIR === 'dist' || !process.env.BUILD_FOLDER;
 
-// Create build folder if it doesn't exist
-if (!fs.existsSync(buildDir)) {
-  fs.mkdirSync(buildDir, { recursive: true });
+let distDir;
+if (useSimpleDist) {
+  // Simple dist folder for GitHub Pages
+  distDir = path.resolve(__dirname, 'dist');
+} else {
+  // Date-based build folders for custom builds
+  const buildFolderName = process.env.BUILD_FOLDER || getBuildFolderName();
+  const buildDir = path.resolve(__dirname, 'build', buildFolderName);
+  distDir = path.resolve(buildDir, 'dist');
+
+  // Create build folder if it doesn't exist
+  if (!fs.existsSync(buildDir)) {
+    fs.mkdirSync(buildDir, { recursive: true });
+  }
+
+  // Save build folder name to file for Capacitor to read
+  fs.writeFileSync(
+    path.resolve(__dirname, 'build', '.current-build'),
+    buildFolderName,
+    'utf8'
+  );
 }
-
-// Save build folder name to file for Capacitor to read
-fs.writeFileSync(
-  path.resolve(__dirname, 'build', '.current-build'),
-  buildFolderName,
-  'utf8'
-);
 
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
-  base: './', // Use relative paths for mobile compatibility
+  base: process.env.VITE_BASE_PATH || './', // GitHub Pages base path (set via env var in CI)
   resolve: {
     alias: {
       '@engine': path.resolve(__dirname, './core/engine'),
@@ -51,7 +61,7 @@ export default defineConfig({
   },
   build: {
     target: 'esnext',
-    outDir: distDir,
+    outDir: process.env.VITE_BUILD_OUTDIR || distDir, // Allow override for GitHub Pages
     assetsDir: 'assets',
     minify: 'esbuild', // Faster than terser
     sourcemap: false,

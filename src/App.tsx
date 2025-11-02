@@ -1,121 +1,74 @@
-import { useEffect, useRef, useState } from 'react';
-import { Engine, RendererSystem, InputSystem, PhysicsSystem, AudioSystem, AssetManagerSystem } from '../core/engine/index';
-import { MainScene } from '../project/code/scenes/MainScene';
+import { useState, useRef, useEffect } from 'react';
+import { Canvas, useFrame } from '@react-three/fiber';
+import * as THREE from 'three';
 import './index.css';
 
 /**
+ * Red Unlit Sphere Component
+ * Simple primitive sphere with unlit red material
+ */
+function RedSphere() {
+  const meshRef = useRef<THREE.Mesh>(null);
+  
+  // Slow rotation animation
+  useFrame((state, delta) => {
+    if (meshRef.current) {
+      meshRef.current.rotation.y += 0.5 * delta;
+    }
+  });
+
+  return (
+    <mesh ref={meshRef} position={[0, 0, 0]}>
+      <sphereGeometry args={[1, 32, 32]} />
+      <meshBasicMaterial color="#ff0000" /> {/* Red unlit material */}
+    </mesh>
+  );
+}
+
+/**
+ * Camera setup - positioned to look at sphere
+ */
+function SceneSetup() {
+  return (
+    <>
+      {/* Camera is automatically set up by Canvas, we'll configure it via gl */}
+      <RedSphere />
+    </>
+  );
+}
+
+/**
  * Main Application Component
- * Initializes and runs the game engine
+ * Uses React Three Fiber with WebGPU/WebGL support
  */
 export default function App() {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const engineRef = useRef<Engine | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
   const [fps, setFps] = useState(0);
+  const [rendererInfo, setRendererInfo] = useState<string>('Loading...');
+  const frameCountRef = useRef(0);
+  const lastTimeRef = useRef(Date.now());
 
   useEffect(() => {
-    if (!canvasRef.current) return;
-
-    const initEngine = async () => {
-      try {
-        // Create engine instance
-        const engine = new Engine();
-        engineRef.current = engine;
-
-        // Create and register systems
-        const canvas = canvasRef.current!;
-        const renderer = new RendererSystem(canvas);
-        const input = new InputSystem(canvas);
-        const physics = new PhysicsSystem();
-        const audio = new AudioSystem();
-        // Asset manager can work without audio context for non-audio assets
-        const assets = new AssetManagerSystem();
-
-        engine.registerSystem(assets); // Register first (priority -10)
-        engine.registerSystem(input);
-        engine.registerSystem(physics);
-        engine.registerSystem(audio);
-        engine.registerSystem(renderer); // Register last (priority 100)
-
-        // Initialize engine (this will initialize all systems in priority order)
-        await engine.initialize({
-          canvas,
-          width: window.innerWidth,
-          height: window.innerHeight,
-          pixelRatio: window.devicePixelRatio,
-          physics: {
-            enabled: true,
-            gravity: { x: 0, y: -9.81, z: 0 }
-          },
-          audio: {
-            enabled: true
-          },
-          debug: true
-        });
-        
-        // Set audio context for asset manager after audio is initialized
-        const audioContext = (audio as any).context;
-        if (audioContext) {
-          (assets as any).audioLoader = async (url: string) => {
-            const response = await fetch(url);
-            const arrayBuffer = await response.arrayBuffer();
-            return await audioContext.decodeAudioData(arrayBuffer);
-          };
-        }
-
-        // Load main scene
-        const mainScene = new MainScene();
-        await engine.loadScene(mainScene);
-
-        // Start engine
-        engine.start();
-
-        // Update FPS display
-        const fpsInterval = setInterval(() => {
-          setFps(Math.round(engine.fps));
-        }, 100);
-
-        setIsLoading(false);
-
-        // Handle window resize
-        const handleResize = () => {
-          renderer.setSize(window.innerWidth, window.innerHeight);
-          renderer.setPixelRatio(window.devicePixelRatio);
-        };
-        window.addEventListener('resize', handleResize);
-
-        // Cleanup
-        return () => {
-          clearInterval(fpsInterval);
-          window.removeEventListener('resize', handleResize);
-          engine.dispose();
-        };
-      } catch (error) {
-        console.error('[App] Failed to initialize engine:', error);
-        setIsLoading(false);
+    // Update FPS counter
+    const updateFPS = () => {
+      frameCountRef.current++;
+      const now = Date.now();
+      if (now - lastTimeRef.current >= 1000) {
+        setFps(frameCountRef.current);
+        frameCountRef.current = 0;
+        lastTimeRef.current = now;
       }
+      requestAnimationFrame(updateFPS);
     };
-
-    initEngine();
+    const fpsInterval = requestAnimationFrame(updateFPS);
+    
+    return () => {
+      cancelAnimationFrame(fpsInterval);
+    };
   }, []);
 
   return (
-    <div style={{ width: '100vw', height: '100vh', margin: 0, padding: 0, overflow: 'hidden' }}>
-      {isLoading && (
-        <div style={{
-          position: 'absolute',
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
-          color: 'white',
-          fontSize: '24px',
-          fontFamily: 'Arial, sans-serif',
-          zIndex: 1000
-        }}>
-          Loading Engine...
-        </div>
-      )}
-      
+    <div style={{ width: '100vw', height: '100vh', margin: 0, padding: 0, overflow: 'hidden', position: 'relative' }}>
+      {/* FPS and Info Display */}
       <div style={{
         position: 'absolute',
         top: '10px',
@@ -123,24 +76,77 @@ export default function App() {
         color: 'white',
         fontFamily: 'monospace',
         fontSize: '14px',
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        backgroundColor: 'rgba(0, 0, 0, 0.7)',
         padding: '10px',
         borderRadius: '5px',
-        zIndex: 1000
+        zIndex: 1000,
+        minWidth: '200px'
       }}>
         <div>FPS: {fps}</div>
         <div>JS Game Engine v1.0.0</div>
+        <div style={{ fontSize: '12px', color: '#aaa', marginTop: '5px' }}>
+          Renderer: {rendererInfo}
+        </div>
       </div>
 
-      <canvas
-        ref={canvasRef}
-        style={{
-          display: 'block',
-          width: '100%',
-          height: '100%',
-          touchAction: 'none'
+      {/* React Three Fiber Canvas */}
+      <Canvas
+        gl={(canvas) => {
+          // Detect WebGPU support
+          const hasWebGPU = 'gpu' in navigator;
+          
+          // For now, use WebGL (WebGPU requires async initialization and is experimental)
+          // WebGL is reliable and works on all browsers
+          const renderer = new THREE.WebGLRenderer({ 
+            canvas,
+            antialias: true,
+            alpha: false,
+            powerPreference: 'high-performance'
+          });
+
+          // Configure renderer
+          renderer.setSize(window.innerWidth, window.innerHeight);
+          renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+          renderer.setClearColor(0x000000, 1);
+
+          // Update renderer info
+          const rendererType = hasWebGPU ? 'WebGL (WebGPU available, experimental)' : 'WebGL';
+          setRendererInfo(rendererType);
+
+          // Note: WebGPU support in Three.js is experimental and requires async setup
+          // For production reliability, WebGL is the recommended choice
+          // Future: Can add WebGPU with proper async initialization if needed
+
+          return renderer;
         }}
-      />
+        camera={{ 
+          position: [0, 0, 5],
+          fov: 75,
+          near: 0.1,
+          far: 1000
+        }}
+        onCreated={({ gl, camera }) => {
+          // Set camera to look at origin
+          camera.lookAt(0, 0, 0);
+          
+          // Handle window resize
+          const handleResize = () => {
+            gl.setSize(window.innerWidth, window.innerHeight);
+            gl.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            if (camera instanceof THREE.PerspectiveCamera) {
+              camera.aspect = window.innerWidth / window.innerHeight;
+              camera.updateProjectionMatrix();
+            }
+          };
+          window.addEventListener('resize', handleResize);
+          
+          return () => {
+            window.removeEventListener('resize', handleResize);
+          };
+        }}
+      >
+        <SceneSetup />
+      </Canvas>
     </div>
   );
 }
