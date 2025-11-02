@@ -1,20 +1,24 @@
 import { CapacitorConfig } from '@capacitor/cli';
 import { readFileSync, existsSync, readdirSync, statSync } from 'fs';
-import { join, dirname } from 'path';
-import { fileURLToPath } from 'url';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+import { join } from 'path';
 
 /**
  * Get the current build folder
+ * Prefers dist/ for GitHub Pages builds, falls back to timestamped build folders
  */
 function getCurrentBuildDir(): string {
-  const buildInfoFile = join(__dirname, 'build', '.current-build');
+  // First, check for dist/ (used by GitHub Pages and build:web)
+  const distDir = join(process.cwd(), 'dist');
+  if (existsSync(distDir) && existsSync(join(distDir, 'index.html'))) {
+    return distDir;
+  }
+  
+  // Fallback to timestamped build folders (for custom builds)
+  const buildInfoFile = join(process.cwd(), 'build', '.current-build');
   
   if (existsSync(buildInfoFile)) {
     const buildFolder = readFileSync(buildInfoFile, 'utf8').trim();
-    const buildPath = join(__dirname, 'build', buildFolder, 'dist');
+    const buildPath = join(process.cwd(), 'build', buildFolder, 'dist');
     
     if (existsSync(buildPath)) {
       return buildPath;
@@ -22,10 +26,10 @@ function getCurrentBuildDir(): string {
   }
   
   // Fallback to latest build folder
-  const buildDir = join(__dirname, 'build');
+  const buildDir = join(process.cwd(), 'build');
   if (existsSync(buildDir)) {
     const folders = readdirSync(buildDir)
-      .filter((f: string) => {
+      .filter((f) => {
         const fullPath = join(buildDir, f);
         return statSync(fullPath).isDirectory() && /^\d{8}-\d{6}$/.test(f);
       })
@@ -38,7 +42,7 @@ function getCurrentBuildDir(): string {
   }
   
   // Default fallback
-  return join(__dirname, 'dist');
+  return distDir;
 }
 
 const config: CapacitorConfig = {
