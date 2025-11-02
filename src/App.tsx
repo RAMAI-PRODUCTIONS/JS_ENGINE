@@ -12,9 +12,16 @@ function GreenSphere() {
   // Use base URL for GitHub Pages compatibility
   // BASE_URL will be '/JS_ENGINE/' in production, './' in dev
   const baseUrl = import.meta.env.BASE_URL || './';
-  // Remove trailing slash if present, then add path
-  const cleanBase = baseUrl.endsWith('/') ? baseUrl.slice(0, -1) : baseUrl;
-  const assetPath = `${cleanBase}/project/assets/meshes/sm_sphere.glb`;
+  // Ensure proper path construction (handle trailing slashes)
+  let assetPath: string;
+  if (baseUrl === './') {
+    // Development: relative path
+    assetPath = './project/assets/meshes/sm_sphere.glb';
+  } else {
+    // Production: base URL + path (baseUrl already includes leading slash)
+    const cleanBase = baseUrl.endsWith('/') ? baseUrl.slice(0, -1) : baseUrl;
+    assetPath = `${cleanBase}/project/assets/meshes/sm_sphere.glb`;
+  }
   const { scene } = useGLTF(assetPath);
   const meshRef = useRef<THREE.Group>(null);
   
